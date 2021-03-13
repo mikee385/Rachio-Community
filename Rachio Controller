@@ -27,11 +27,12 @@
  * V2.0.7.2:  Removed excessive logging
  * V2.0.7.3:  Removed excessive isStateChange: true
  * V2.0.7.4:  Removed Health Check capability
+ * V2.0.7.5:  Removed lastUpdatedDt
  */
 
 import java.text.SimpleDateFormat
 
-String devVer() { return "2.0.7.4" }
+String devVer() { return "2.0.7.5" }
 Integer statusRefresh() { return 60 }
 
 metadata {
@@ -80,7 +81,6 @@ metadata {
         attribute "monthlyMinutesSaved", "number"
         attribute "monthlyWeatherIntelligenceCount", "number"
         
-        attribute "lastUpdatedDt", "string"
         attribute "notificationMessage", "string"
         
         attribute "dashboard", "string"
@@ -192,7 +192,7 @@ metadata {
     }
     main "valveTile"
     details(["valveTile", "hardwareModel", "hardwareDesc", "activeZoneCnt", "curZoneIsCyclingTile", "leftButtonControl", "rainDelay", "rightButtonControl", "applyRainDelay",
-            "leftZoneTimeButton", "curZoneWaterTime", "rightZoneTimeButton", "runAllZonesTile", "pauseZoneRunTile", "lastUpdatedDt", "standbyMode", "refresh"])
+            "leftZoneTimeButton", "curZoneWaterTime", "rightZoneTimeButton", "runAllZonesTile", "pauseZoneRunTile", "standbyMode", "refresh"])
 }
 
 def getAppImg(imgName)	{ return "https://raw.githubusercontent.com/lnjustin/Rachio-Community/master/Images/$imgName" }
@@ -255,7 +255,6 @@ def generateEvent(Map results) {
         wateringSummaryDataEvent(results?.wateringSummaryData)
         nextEventDataEvent(results?.nextEvent)
         setDashboard()         // force dashboard update
-        if(isOnline) { lastUpdatedEvent() }
     }
     return "Controller"
 }
@@ -278,16 +277,6 @@ def getDurationMinDesc(long secondsCnt) {
     minutesCnt -= minutes
     long hoursCnt = minutesCnt / 60
     return "${minutes}"
-}
-
-def lastUpdatedEvent() {
-    def lastDt = formatDt(new Date())
-    def lastUpd = device?.currentState("lastUpdatedDt")?.stringValue
-    state?.lastUpdatedDt = lastDt?.toString()
-    if(isStateChange(device, "lastUpdatedDt", lastDt.toString())) {
-        // log.info "${device?.displayName} Status: (${state?.isOnline ? "Online and ${state?.inStandby ? "in Standby Mode" : "Ready"}" : "OFFLINE"}) - Last Updated: (${lastDt})"
-        sendEvent(name: 'lastUpdatedDt', value: lastDt?.toString(), displayed: false)
-    }
 }
 
 def markOffLine() {

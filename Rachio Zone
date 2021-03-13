@@ -25,11 +25,12 @@
  * V2.0.2.2:  Removed excessive logging
  * V2.0.2.3:  Removed excessive isStateChange: true
  * V2.0.2.4:  Removed Health Check capability
+ * V2.0.2.5:  Removed lastUpdatedDt
  */
 
 import java.text.SimpleDateFormat
 
-String devVer() { return "2.0.2.4" }
+String devVer() { return "2.0.2.5" }
 Integer statusRefresh() { return 60 }
 
 metadata {
@@ -85,7 +86,6 @@ metadata {
         //custom shade data
         attribute "shadeName", "string"
         attribute "inStandby", "string"
-        attribute "lastUpdatedDt", "string"
         attribute "notificationMessage", "string"
 
         attribute "zoneRunStatus", "string"
@@ -185,7 +185,7 @@ metadata {
         }
     }
     main "valveTile"
-    details(["valveTile", "zoneImage", "zoneName", "scheduleType", "nozzleName", "soilName", "slopeName", "cropName", "shadeName", "zoneSquareFeet", "leftZoneTimeButton", "zoneWaterTime", "rightZoneTimeButton", "startZoneTile", "lastUpdatedDt", "refresh"])
+    details(["valveTile", "zoneImage", "zoneName", "scheduleType", "nozzleName", "soilName", "slopeName", "cropName", "shadeName", "zoneSquareFeet", "leftZoneTimeButton", "zoneWaterTime", "rightZoneTimeButton", "startZoneTile", "refresh"])
 }
 
 // parse events into attributes
@@ -267,8 +267,6 @@ def generateEvent(Map results) {
         customSlopeDataEvent(results?.data?.customSlope)
         customCropDataEvent(results?.data?.customCrop)
         customShadeDataEvent(results?.data?.customShade)
-
-        if(isOnline) { lastUpdatedEvent() }
     }
     return "hello from zone"
 }
@@ -291,16 +289,6 @@ def getDurationMinDesc(long secondsCnt) {
     minutesCnt -= minutes
     long hoursCnt = minutesCnt / 60
     return "${minutes}"
-}
-
-def lastUpdatedEvent() {
-    def lastDt = formatDt(new Date())
-    def lastUpd = device?.currentState("lastUpdatedDt")?.stringValue
-    state?.lastUpdatedDt = lastDt?.toString()
-    if(isStateChange(device, "lastUpdatedDt", lastDt.toString())) {
-        // log.info "${device?.displayName} is (${state?.isOnline ? "Online and ${state?.inStandby ? "in Standby Mode" : "Active"}" : "OFFLINE"}) - Last Updated: (${lastDt})"
-        sendEvent(name: 'lastUpdatedDt', value: lastDt?.toString(), displayed: false)
-    }
 }
 
 def markOffLine() {
