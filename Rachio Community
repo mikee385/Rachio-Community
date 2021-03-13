@@ -34,6 +34,7 @@
  * V2.0.7:  Fixed issue with logging and with getCurrentRainDelay method
  * V2.0.7.1:  Updated authors and namespaces
  * V2.0.7.2:  Removed excessive logging
+ * V2.0.7.4:  Removed Health Check capability
  */
 
 import groovy.json.*
@@ -70,7 +71,7 @@ mappings {
     path("/rachioDashboard/:controllerID") { action: [ GET: "buildDashboard"] }
 }
 
-String appVer() { return "2.0.7.2" }
+String appVer() { return "2.0.7.4" }
 
 @Field Integer zoneRunTimeDefault = 10
 
@@ -1046,7 +1047,6 @@ def pollChildren(childDev, devData, devDetails, devState, devZoneDetails, devMon
             
             def status = devStatus?.status
             def onlStatus = status?.toString()?.toLowerCase() == "online" ? "online" : "offline"
-            if(!childDev?.getDataValue("HealthEnrolled")) { childDev.updated() }
             Boolean pauseInStandby = settings?.pauseInStandby == false ? false : true
             Boolean inStandby = devData?.on.toString() != "true" ? true : false
             Boolean schedRunning = (schedData?.status == "PROCESSING") ? true : false
@@ -1086,7 +1086,6 @@ def pollChildren(childDev, devData, devDetails, devState, devZoneDetails, devMon
             }
             if (childDev && data != []) {
                 childDev?.generateEvent(data)
-                childDev?.sendEvent(name: "DeviceWatch-DeviceStatus", value: onlStatus, displayed: false)
             }
         } else { log.warn "pollChildren cannot update children because it is missing the required parameters..." }
         
