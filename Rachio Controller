@@ -3,9 +3,11 @@
  *
  *  Copyright\u00A9 2018 Anthony Santilli
  *  Copyright\u00A9 2020 Justin Leonard
+ *  Copyright\u00A9 2021 Michael Pierce
  *
  *  V1.1.1 written by Anthony Santilli (@tonesto7)
  *  Ported to Hubitat and Enhanced to V2.0 by Justin Leonard (@JustinL)
+*  Forked and cleaned up by Michael Pierce (@mikee385)
  *
  *  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  *  in compliance with the License. You may obtain a copy of the License at:
@@ -21,15 +23,16 @@
  * V2.0.3:  Fixed issue with dashboard sizing; Added dashboard attribute to controller
  * V2.0.6:  Fixed issue with default zone run time
  * V2.0.7:  Fixed null pointer errors caused by null nextRun if nothing scheduled
+ * V2.0.7.1:  Updated authors and namespaces
  */
 
 import java.text.SimpleDateFormat
 
-String devVer() { return "2.0.7" }
+String devVer() { return "2.0.7.1" }
 Integer statusRefresh() { return 60 }
 
 metadata {
-    definition (name: "Rachio Controller", namespace: "lnjustin", author: "Anthony Santilli, Justin Leonard") {
+    definition (name: "Rachio Controller", namespace: "mikee385", author: "Anthony Santilli, Justin Leonard, Michael Pierce") {
         capability "Refresh"
         capability "Switch"
         capability "Actuator"

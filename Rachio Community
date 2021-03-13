@@ -3,9 +3,11 @@
  *
  *  Copyright\u00A9 2018 Anthony Santilli
  *  Copyright\u00A9 2020 Justin Leonard
+ *  Copyright\u00A9 2021 Michael Pierce
  *
  *  V1.1.1 written by Anthony Santilli (@tonesto7)
  *  Ported to Hubitat and Enhanced to V2.0+ by Justin Leonard (@JustinL)
+ *  Forked and cleaned up by Michael Pierce (@mikee385)
  *
  * Many thanks to Tom Walling (@tomw) for high-level consultation on architecture and functionality for enhancing the native Rachio app/drivers.
  * Thanks also to Josh Lyon (@josh) for proof of concept for generating an SVG for output at an Oath endpoint
@@ -28,8 +30,9 @@
  * V2.0.3:  Fixed issue with dashboard sizing; Added dashboard attribute to controller
  * V2.0.4:  Increased font size on dashboard for precipitation info
  * V2.0.5:  Fixed issue with web browser caching dashboard image in dashboard attribute of controller
- * V2.0.6:    Fixed issue with default zone run time
- * V2.0.7:    Fixed issue with logging and with getCurrentRainDelay method
+ * V2.0.6:  Fixed issue with default zone run time
+ * V2.0.7:  Fixed issue with logging and with getCurrentRainDelay method
+ * V2.0.7.1:  Updated authors and namespaces
  */
 
 import groovy.json.*
@@ -39,8 +42,8 @@ import groovy.transform.Field
 
 definition(
     name: "Rachio Community",
-    namespace: "lnjustin",
-    author: "Anthony Santilli, Justin Leonard",
+    namespace: "mikee385",
+    author: "Anthony Santilli, Justin Leonard, Michael Pierce",
     description: "Community version of Rachio Integration.",
     category: "Green Living",
     iconUrl: "https://s3-us-west-2.amazonaws.com/rachio-media/smartthings/Rachio-logo-100px.png",
@@ -66,7 +69,7 @@ mappings {
     path("/rachioDashboard/:controllerID") { action: [ GET: "buildDashboard"] }
 }
 
-String appVer() { return "2.0.7" }
+String appVer() { return "2.0.7.1" }
 
 @Field Integer zoneRunTimeDefault = 10
 
@@ -78,7 +81,7 @@ def appInfoSect()	{
     section() {
         def str = ""
         str += "${app?.name}"
-        str += "\nCopyright\u00A9 Anthony Santilli, Justin Leonard"
+        str += "\nCopyright\u00A9 Anthony Santilli, Justin Leonard, Michael Pierce"
         str += "\nVersion: ${appVer()}"
         paragraph str
     }
@@ -901,7 +904,7 @@ def addRemoveDevices(uninst=false) {
                 //Check if the discovered sprinklers are already initiated with corresponding device types.
                 def d = getChildDevice(contDev?.key)
                 if(!d) {
-                    d = addChildDevice("lnjustin", getChildContName(), contDev?.key, null, [label: getDeviceLabelStr(contDev?.value?.name), completedSetup: true])
+                    d = addChildDevice("mikee385", getChildContName(), contDev?.key, null, [label: getDeviceLabelStr(contDev?.value?.name), completedSetup: true])
                     def localUri = getFullLocalApiServerUrl() + "/rachioDashboard/${contDev?.key}?access_token=${state.accessToken}"
                     String dashboard = '<style type=\'text/css\'>'
 		            dashboard += '.centerImage'
@@ -923,7 +926,7 @@ def addRemoveDevices(uninst=false) {
                     //Check if the discovered sprinklers are already initiated with corresponding device types.
                     def d2 = getChildDevice(zoneDni?.key)
                     if(!d2) {
-                        d2 = addChildDevice("lnjustin", getChildZoneName(), zoneDni?.key, null, [label: getDeviceLabelStr(zoneDni?.value), completedSetup: true])
+                        d2 = addChildDevice("mikee385", getChildZoneName(), zoneDni?.key, null, [label: getDeviceLabelStr(zoneDni?.value), completedSetup: true])
                       //  d2.completedSetup = true
                         log.info "Zone Device Created: (${d2?.displayName}) with id: [${zoneDni?.key}]"
                     } else {
