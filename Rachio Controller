@@ -24,11 +24,12 @@
  * V2.0.6:  Fixed issue with default zone run time
  * V2.0.7:  Fixed null pointer errors caused by null nextRun if nothing scheduled
  * V2.0.7.1:  Updated authors and namespaces
+ * V2.0.7.2:  Removed excessive logging
  */
 
 import java.text.SimpleDateFormat
 
-String devVer() { return "2.0.7.1" }
+String devVer() { return "2.0.7.2" }
 Integer statusRefresh() { return 60 }
 
 metadata {
@@ -324,7 +325,7 @@ def isWateringEvent(status, zoneId) {
     def valveState = isOn ? "open" : "close"
     parent?.setWateringDeviceState(device?.deviceNetworkId, isOn)
     if(isStateChange(device, "watering", newState.toString())) {
-        log.debug("UPDATED: Watering (${newState}) | Previous: (${curState})")
+        // log.debug("UPDATED: Watering (${newState}) | Previous: (${curState})")
         sendEvent(name: 'watering', value: newState, displayed: true, isStateChange: true)
         sendEvent(name: 'valve', value: valveState, displayed: false, isStateChange: true)
         sendEvent(name: 'switch', value: newState, displayed: false, isStateChange: true)
@@ -495,34 +496,34 @@ def scheduleDataEvent(sData, zData, rainDelay) {
     def zoneIsCycling =  !sData?.cycling ? false : sData?.cycling
     def wateringVal = device?.currentState("watering")?.value
     if(isStateChange(device, "scheduleType", curSchedType?.toString().capitalize())) {
-        log.info("UPDATED: ScheduleType (${curSchedType})")
+        // log.info("UPDATED: ScheduleType (${curSchedType})")
         sendEvent(name: 'scheduleType', value: curSchedType?.toString().capitalize(), displayed: true, isStateChange: true)
     }
     if(!state?.inStandby && wateringVal != "offline" && isStateChange(device, "curZoneRunStatus", zoneRunStatus?.toString())) {
-        log.info("UPDATED: ZoneRunStatus (${zoneRunStatus})")
+        // log.info("UPDATED: ZoneRunStatus (${zoneRunStatus})")
         sendEvent(name: 'curZoneRunStatus', value: zoneRunStatus?.toString(), displayed: false, isStateChange: true)
     }
     if(isStateChange(device, "curZoneDuration", zoneDuration?.toString())) {
-        log.info("UPDATED: Active Zone Duration (${zoneDuration})")
+        // log.info("UPDATED: Active Zone Duration (${zoneDuration})")
         sendEvent(name: 'curZoneDuration', value: zoneDuration?.toString(), displayed: true, isStateChange: true)
     }
     if(isStateChange(device, "curZoneName", zoneName?.toString())) {
-        log.info("UPDATED: Current Zone Name (${zoneName})")
+        // log.info("UPDATED: Current Zone Name (${zoneName})")
         sendEvent(name: 'curZoneName', value: zoneName?.toString(), displayed: true, isStateChange: true)
     }
     if(isStateChange(device, "curZoneNumber", zoneNum?.toString())) {
-        log.info("UPDATED: Active Zone Number (${zoneNum})")
+        // log.info("UPDATED: Active Zone Number (${zoneNum})")
         sendEvent(name: 'curZoneNumber', value: zoneNum, displayed: true, isStateChange: true)
     }
     if(isStateChange(device, "curZoneCycleCount", zoneCycleCount?.toString())) {
-        log.info("UPDATED: Zone Cycle Count (${zoneCycleCount})")
+        // log.info("UPDATED: Zone Cycle Count (${zoneCycleCount})")
         sendEvent(name: 'curZoneCycleCount', value: zoneCycleCount, displayed: true, isStateChange: true)
     }
     if(isStateChange(device, "curZoneIsCycling", zoneIsCycling?.toString().capitalize())) {
         sendEvent(name: 'curZoneIsCycling', value: zoneIsCycling?.toString().capitalize(), displayed: true, isStateChange: true)
     }
     if(isStateChange(device, "curZoneStartDate", (zoneStartDate ? epochToDt(zoneStartDate).toString() : "Not Active"))) {
-        log.info("UPDATED: Zone StartDate (${(zoneStartDate ? epochToDt(zoneStartDate).toString() : "Not Active")})")
+        // log.info("UPDATED: Zone StartDate (${(zoneStartDate ? epochToDt(zoneStartDate).toString() : "Not Active")})")
         sendEvent(name: 'curZoneStartDate', value: (zoneStartDate ? epochToDt(zoneStartDate).toString() : "Not Active"), displayed: true, isStateChange: true)
     }
 }
@@ -597,7 +598,7 @@ def refresh() {
 }
 
 void poll() {
-    log.info("Requested Parent Poll...");
+    // log.info("Requested Parent Poll...");
     parent?.poll(this)
 }
 
@@ -704,7 +705,7 @@ def close() {
             sendEvent(name:'switch', value: "off", displayed: false, isStateChange: true)
             sendEvent(name:'valve', value: "closed", displayed: false, isStateChange: true)
         } else {
-            log.trace "close(). marking offline"
+            //log.trace "close(). marking offline"
             markOffLine();
         }
     }

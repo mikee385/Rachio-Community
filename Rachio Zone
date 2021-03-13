@@ -22,11 +22,12 @@
  * V2.0.1:    Fixed issue with default zone run time
  * V2.0.2:  Fixed null pointer errors caused by null nextRun if nothing scheduled
  * V2.0.2.1:  Updated authors and namespaces
+ * V2.0.2.2:  Removed excessive logging
  */
 
 import java.text.SimpleDateFormat
 
-String devVer() { return "2.0.2.1" }
+String devVer() { return "2.0.2.2" }
 Integer statusRefresh() { return 60 }
 
 metadata {
@@ -188,7 +189,7 @@ metadata {
 
 // parse events into attributes
 def parse(String description) {
-    log.debug "Parsing '${description}'"
+    // log.debug "Parsing '${description}'"
 }
 
 def initialize() {
@@ -306,7 +307,7 @@ def lastUpdatedEvent() {
 
 def markOffLine() {
 	if(isStateChange(device, "watering", "offline")) { 
-		log.trace("UPDATED: Watering (Offline)")
+		//log.trace("UPDATED: Watering (Offline)")
 		sendEvent(name: 'watering', value: "offline", displayed: true, isStateChange: true)
 		sendEvent(name: 'valve', value: "closed", displayed: false, isStateChange: true)
 		sendEvent(name: 'switch', value: "off", displayed: false, isStateChange: true)
@@ -318,7 +319,7 @@ def markOffLine() {
 
 def markStandby() {
 	if(isStateChange(device, "watering", "standby")) {
-		log.trace("UPDATED: Watering (Standby Mode)")
+		//log.trace("UPDATED: Watering (Standby Mode)")
 		sendEvent(name: 'watering', value: "standby", displayed: true, isStateChange: true)
 		sendEvent(name: 'valve', value: "closed", displayed: false, isStateChange: true)
 		sendEvent(name: 'switch', value: "off", displayed: false, isStateChange: true)
@@ -334,7 +335,7 @@ def isWateringEvent(status, zoneId) {
     def isOn = (status == "PROCESSING" && device?.deviceNetworkId == zoneId) ? true : false
     def newState = isOn ? "on" : "off"
     if(isStateChange(device, "watering", newState.toString())) {
-        log.debug("UPDATED: Watering (${newState}) | Previous: (${curState})")
+        // log.debug("UPDATED: Watering (${newState}) | Previous: (${curState})")
         sendEvent(name: 'watering', value: newState, displayed: true, isStateChange: true)
         sendEvent(name: 'switch', value: (isOn ? "on" : "off"), displayed: false, isStateChange: true)
         sendEvent(name: 'valve', value: (isOn ? "open" : "closed"), displayed: false, isStateChange: true)
@@ -345,7 +346,7 @@ def zoneTotalDurationEvent(val) {
     def curState = device?.currentState("zoneTotalDuration")?.value.toString()
     def newState = val ? val.toInteger() : 0
     if(isStateChange(device, "zoneTotalDuration", newState.toString())) {
-        log.debug("UPDATED: Zone Total Duration Value (${newState}) | Previous: (${curState})")
+        // log.debug("UPDATED: Zone Total Duration Value (${newState}) | Previous: (${curState})")
         sendEvent(name:'zoneTotalDuration', value: newState, displayed: true)
     }
 }
@@ -354,7 +355,7 @@ def saturatedDepthOfWaterEvent(val) {
     def curState = device?.currentState("saturatedDepthOfWater")?.value.toString()
     def newState = val ? val.toDouble() : 0.0
     if(isStateChange(device, "saturatedDepthOfWater", newState.toString())) {
-        log.debug("UPDATED: Saturated Depth Of Water Value (${newState}) | Previous: (${curState})")
+        // log.debug("UPDATED: Saturated Depth Of Water Value (${newState}) | Previous: (${curState})")
         sendEvent(name:'saturatedDepthOfWater', value: newState, displayed: true)
     }
 }
@@ -363,7 +364,7 @@ def depthOfWaterEvent(val) {
     def curState = device?.currentState("depthOfWater")?.value.toString()
     def newState = val ? val.toDouble() : 0.0
     if(isStateChange(device, "depthOfWater", newState.toString())) {
-        log.debug("UPDATED: Depth Of Water Value (${newState}) | Previous: (${curState})")
+        // log.debug("UPDATED: Depth Of Water Value (${newState}) | Previous: (${curState})")
         sendEvent(name:'depthOfWater', value: newState, displayed: true)
     }
 }
@@ -372,7 +373,7 @@ def efficiencyEvent(val) {
     def curState = device?.currentState("efficiency")?.value.toString()
     def newState = val ? val.toDouble() : 0.0
     if(isStateChange(device, "efficiency", newState.toString())) {
-        log.debug("UPDATED: Efficiency Value (${newState}) | Previous: (${curState})")
+        // log.debug("UPDATED: Efficiency Value (${newState}) | Previous: (${curState})")
         sendEvent(name:'efficiency', value: newState, displayed: false)
     }
 }
@@ -381,7 +382,7 @@ def maxRuntimeEvent(val) {
     def curState = device?.currentState("maxRuntime")?.value.toString()
     def newState = val ? val.toInteger() : 0
     if(isStateChange(device, "maxRuntime", newState.toString())) {
-        log.debug("UPDATED: Max Runtime Value (${newState}) | Previous: (${curState})")
+        // log.debug("UPDATED: Max Runtime Value (${newState}) | Previous: (${curState})")
         sendEvent(name:'maxRuntime', value: newState, displayed: false)
     }
 }
@@ -390,7 +391,7 @@ def availableWaterEvent(val) {
     def curState = device?.currentState("availableWater")?.value.toString()
     def newState = val ? val.toDouble() : 0.0
     if(isStateChange(device, "availableWater", newState.toString())) {
-        log.debug("UPDATED: Available Water Value (${newState}) | Previous: (${curState})")
+        // log.debug("UPDATED: Available Water Value (${newState}) | Previous: (${curState})")
         sendEvent(name:'availableWater', value: newState, displayed: true)
     }
 }
@@ -399,7 +400,7 @@ def zoneSquareFeetEvent(val) {
     def curState = device?.currentState("zoneSquareFeet")?.value.toString()
     def newState = val ? val.toInteger() : 0
     if(isStateChange(device, "zoneSquareFeet", newState.toString())) {
-        log.debug("UPDATED: Zone Area Square Feet (${newState}) | Previous: (${curState})")
+        // log.debug("UPDATED: Zone Area Square Feet (${newState}) | Previous: (${curState})")
         sendEvent(name:'zoneSquareFeet', value: newState, displayed: true)
     }
 }
@@ -408,7 +409,7 @@ def rootZoneDepthEvent(val) {
     def curState = device?.currentState("rootZoneDepth")?.value.toString()
     def newState = val ? val.toInteger() : 0
     if(isStateChange(device, "rootZoneDepth", newState.toString())) {
-        log.debug("UPDATED: Root Zone Depth Value (${newState}) | Previous: (${curState})")
+        // log.debug("UPDATED: Root Zone Depth Value (${newState}) | Previous: (${curState})")
         sendEvent(name:'rootZoneDepth', value: newState, displayed: false)
     }
 }
@@ -417,7 +418,7 @@ def zoneNumEvent(val) {
     def curState = device?.currentState("zoneNumber")?.value.toString()
     def newState = val ? val.toInteger() : 0
     if(isStateChange(device, "zoneNumber", newState.toString())) {
-        log.debug("UPDATED: Zone Number (${newState}) | Previous: (${curState})")
+        // log.debug("UPDATED: Zone Number (${newState}) | Previous: (${curState})")
         sendEvent(name:'zoneNumber', value: newState, displayed: true)
     }
 }
@@ -426,7 +427,7 @@ def zoneNameEvent(val) {
     def curState = device?.currentState("zoneName")?.value.toString()
     def newState = val ? val.toString() : "unknown"
     if(isStateChange(device, "zoneName", newState.toString())) {
-        log.debug("UPDATED: Zone Name (${newState}) | Previous: (${curState})")
+        // log.debug("UPDATED: Zone Name (${newState}) | Previous: (${curState})")
         sendEvent(name:'zoneName', value: newState, displayed: true)
     }
 }
@@ -446,7 +447,7 @@ def setZoneWaterTime(timeVal) {
     def curState = device?.currentState("zoneWaterTime")?.value.toString()
     def newVal = timeVal ? timeVal.toInteger() : parent?.getZoneRunTimeDefaultSetting()
     if(isStateChange(device, "zoneWaterTime", newVal.toString())) {
-        log.debug("UPDATED: Manual Zone Water Time (${newVal}) | Previous: (${curState})")
+        // log.debug("UPDATED: Manual Zone Water Time (${newVal}) | Previous: (${curState})")
         sendEvent(name: 'zoneWaterTime', value: newVal, displayed: true)
     }
 }
@@ -490,7 +491,7 @@ def scheduleDataEvent(data) {
         sendEvent(name: 'zoneElapsed', value: zoneElapsed.toString(), displayed: false, isStateChange: true)
     }
     if(!state?.inStandby && wateringVal != "offline" && isStateChange(device, "zoneRunStatus", zoneRunStatus.toString())) {
-        log.info("UPDATED: ZoneRunStatus (${zoneRunStatus})")
+        // log.info("UPDATED: ZoneRunStatus (${zoneRunStatus})")
         sendEvent(name: 'zoneRunStatus', value: zoneRunStatus.toString(), displayed: true, isStateChange: true)
     }
     if(isStateChange(device, "zoneCycleCount", zoneCycleCount.toString())) {
@@ -553,7 +554,7 @@ def refresh() {
 }
 
 void poll() {
-    log.info("Requested Parent Poll...");
+    // log.info("Requested Parent Poll...");
     parent?.poll(this)
 }
 
@@ -582,14 +583,14 @@ def isCmdOk2Run() {
 }
 
 def startZone() {
-    log.trace "startZone()..."
+    //log.trace "startZone()..."
     if(!isCmdOk2Run()) { return }
     def zoneNum = device?.latestValue('zoneNumber').toInteger()
     def waterTime = device?.latestValue('zoneWaterTime')
-    log.debug("Starting Watering for Zone (${zoneNum}) for (${waterTime}) Minutes")
+    // log.debug("Starting Watering for Zone (${zoneNum}) for (${waterTime}) Minutes")
     def res = parent?.startZone(this, state?.deviceId, zoneNum, waterTime)
     if (res) {
-        log.debug "runThisZone was Sent Successfully: ${res}"
+        // log.debug "runThisZone was Sent Successfully: ${res}"
         sendEvent(name:'watering', value: "on", displayed: true, isStateChange: true)
         sendEvent(name:'switch', value: "on", displayed: false, isStateChange: true)
         sendEvent(name:'valve', value: "open", displayed: false, isStateChange: true)
@@ -600,7 +601,7 @@ def startZone() {
 }
 
 def on() {
-    log.trace "zone on..."
+    //log.trace "zone on..."
     if(!isCmdOk2Run()) { return }
     def isOn = device?.currentState("switch")?.value.toString() == "on" ? true : false
     if (!isOn) { open() }
@@ -608,7 +609,7 @@ def on() {
 }
 
 def off() {
-    log.trace "zone off..."
+    //log.trace "zone off..."
     //if(!isCmdOk2Run()) { return }
     def isOff = device?.currentState("switch")?.value.toString() == "off" ? true : false
     if (!isOff) { close() }
@@ -616,7 +617,7 @@ def off() {
 }
 
 def open() {
-    log.trace "Zone open()..."
+    //log.trace "Zone open()..."
     if(!isCmdOk2Run()) { return }
     def isOpen = device?.currentState("valve")?.value.toString() == "open" ? true : false
     if (!isOpen) {
@@ -626,13 +627,13 @@ def open() {
 }
 
 def close() {
-    log.trace "Zone close()..."
+    //log.trace "Zone close()..."
     //if(!isCmdOk2Run()) { return }
     def isClosed = device?.currentState("valve")?.value.toString() == "closed" ? true : false
     if (!isClosed) {
         def res = parent?.off(this, state?.deviceId)
         if (res) {
-            log.info "Zone was Stopped Successfully..."
+            // log.info "Zone was Stopped Successfully..."
             sendEvent(name:'watering', value: "off", displayed: true, isStateChange: true)
             sendEvent(name:'switch', value: "off", displayed: false, isStateChange: true)
             sendEvent(name:'valve', value: "closed", displayed: false, isStateChange: true)
@@ -642,7 +643,7 @@ def close() {
 
 // To be used directly by smart apps
 def stopWatering() {
-    log.trace "stopWatering"
+    //log.trace "stopWatering"
     close()
 }
 
