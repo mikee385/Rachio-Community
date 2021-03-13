@@ -1320,7 +1320,7 @@ def getMonthEnd() {
     calendar.set(date[Calendar.YEAR], date[Calendar.MONTH], date[Calendar.DATE])
     def lastDayOfMonth = calendar.getActualMaximum(GregorianCalendar.DAY_OF_MONTH)
     def monthEnd = date.copyWith(date: lastDayOfMonth, hourOfDay: 23, minute: 59, second: 59)
-    log.trace "last day of month: ${monthEnd}"
+    //log.trace "last day of month: ${monthEnd}"
     return monthEnd
 }
 
